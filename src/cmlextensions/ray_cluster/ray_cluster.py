@@ -70,14 +70,16 @@ class RayCluster():
           timeout_seconds=startup_timeout_seconds
         )
         return workload_details
-                
-        
 
 
-    def _start_ray_head(self, startup_timeout_seconds):
+
+
+    def _start_ray_head(self, startup_timeout_seconds, head_system_configs):
         # We need to start the ray process with --block else the command completes and the CML Worker terminates
-        head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port}"
+        if head_system_configs:
+            head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port} --system-config='{head_system_configs}'"
 
+        head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port}"
         args = {
             'n': 1,
             'cpu': self.head_cpu,
@@ -109,7 +111,7 @@ class RayCluster():
 
         self.ray_worker_details = self._start_ray_workload(args, startup_timeout_seconds)
 
-    def init(self, startup_timeout_seconds = 90):
+    def init(self, startup_timeout_seconds = 90, head_system_configs=None):
         """
         Creates a Ray Cluster on the CML Workers infrastructure.
         """
@@ -124,7 +126,7 @@ class RayCluster():
         # Start the ray head process
         print("Starting ray head...")
         startup_failed = False
-        self._start_ray_head(startup_timeout_seconds = startup_timeout_seconds)
+        self._start_ray_head(startup_timeout_seconds = startup_timeout_seconds, head_system_configs)
 
         if len(self.ray_head_details.get("workers",[])) < 1:
             print(f"Could not start ray head.")
