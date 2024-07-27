@@ -78,8 +78,8 @@ class RayCluster():
         # We need to start the ray process with --block else the command completes and the CML Worker terminates
         if head_system_configs:
             head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port} --system-config='{head_system_configs}'"
-
-        head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port}"
+        else:
+            head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port}"
         args = {
             'n': 1,
             'cpu': self.head_cpu,
