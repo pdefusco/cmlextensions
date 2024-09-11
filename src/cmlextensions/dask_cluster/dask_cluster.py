@@ -22,10 +22,10 @@ class DaskCluster:
     def __init__(
         self,
         num_workers,
-        worker_cpu=2,
-        worker_memory=4,
-        scheduler_cpu=2,
-        scheduler_memory=4,
+        worker_cpu,
+        worker_memory,
+        scheduler_cpu,
+        scheduler_memory,
         dashboard_port=DEFAULT_DASHBOARD_PORT,
     ):
         self.num_workers = num_workers
